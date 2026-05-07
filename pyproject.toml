@@ -1,0 +1,21 @@
+[project]
+name = "openai-agents-sdk"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "asyncpg>=0.30",
+    "fastapi>=0.115",
+    "httpx>=0.28",
+    "ipykernel>=6.29",
+    "markdown>=3.10.2",
+    "openai>=2.0.0",
+    "openai-agents>=0.14.8",
+    "psycopg2-binary>=2.9",
+    "pydantic>=2.0",
+    "python-dotenv>=1.0",
+    "python-pptx>=1.0.2",
+    "resend>=2.0",
+    "sse-starlette>=2.0",
+]
