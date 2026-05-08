@@ -16,7 +16,7 @@ async def review_file(file_name: str) -> None:
     with trace("Code Review Demo"):
         # Review agent call
         review_agent_response = await Runner.run(code_reviewer_agent, code)
-        print(type(review_agent_response.final_output))
+        print("Code Review Response type: " + type(review_agent_response.final_output))
         display_token_usage(review_agent_response)
 
         # Frontend agent call
