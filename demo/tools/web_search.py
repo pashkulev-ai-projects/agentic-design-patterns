@@ -1,0 +1,21 @@
+import os
+import httpx
+from agents import function_tool
+
+
+@function_tool
+def web_search(query: str) -> str:
+    """Search the web for any topic and return a summary of the top results."""
+    response = httpx.post(
+        "https://google.serper.dev/search",
+        headers={"X-API-KEY": os.environ["SERPER_API_KEY"], "Content-Type": "application/json"},
+        json={"q": query, "num": 5},
+        timeout=10,
+    )
+    response.raise_for_status()
+    results = response.json().get("organic", [])
+
+    return "\n\n".join(
+        f"{r['title']}\n{r['link']}\n{r.get('snippet', '')}"
+        for r in results
+    )
