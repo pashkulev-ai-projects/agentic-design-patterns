@@ -7,3 +7,6 @@ from demo.my_agents.tech_support import tech_support_agent
 from demo.my_agents.triage_agent import triage_agent
 from demo.my_agents.code_reviewer import code_reviewer_agent, CodeReview
 from demo.my_agents.email_sender import email_sender_agent
+from demo.my_agents.injection_detector import injection_detector_agent
+from demo.my_agents.leak_detector import leak_detector_agent
+from demo.my_agents.code_reviewer_guarded import guarded_reviewer_agent
