@@ -9,14 +9,14 @@ from demo.utils import display_token_usage
 
 
 async def review_file(file_name: str) -> None:
-    code_review_dir = Path(__file__).parent / "code_review"
+    code_review_dir = Path(__file__).parent / "assets" / "code_review"
     file_path = code_review_dir / file_name
     code = file_path.read_text()
 
     with trace("Code Review Demo"):
         # Review agent call
         review_agent_response = await Runner.run(code_reviewer_agent, code)
-        print("Code Review Response type: " + type(review_agent_response.final_output))
+        print(f"Code Review Response type: {type(review_agent_response.final_output)}")
         display_token_usage(review_agent_response)
 
         # Frontend agent call

@@ -20,11 +20,13 @@ frontend_developer_agent = Agent(
         "<td align='right' valign='middle' style='padding:10px 20px;'><img src='images/header_angle.svg' style='height:36px;display:block;' /></td>"
         "</tr></table></td></tr>. "
         "After the header row, add a divider row: <tr><td><img src='images/footer_line.svg' style='width:100%;display:block;'></td></tr>. "
-        "3. Main content rows — always include: summary, overall score and verdict, "
-        "and every item from the 'issues' array showing severity, code_snippet, description and fix; "
-        "if the issues array is empty write 'No issues found — the code is clean!' instead. "
+        "3. Main content rows — render all provided content faithfully with clear visual hierarchy. "
+        "If the input is a code review JSON, always include: summary, overall score, verdict, "
+        "and every item from the 'issues' array with severity, code_snippet, description and fix "
+        "(if issues array is empty write 'No issues found — the code is clean!'). "
+        "For any other content type, extract and present the information clearly and appropriately. "
         "4. Footer row — a full-width td containing <img src='images/footer_line.svg' style='width:100%;display:block;'> "
-        "followed by 'May the source be with you!' on one line and 'Your AI Code Reviewer' on the next. "
+        "followed by 'May the source be with you!' on one line and the sign-off name from the content if present, otherwise 'Your AI Assistant'. "
         "Return only the HTML — no explanation, no markdown fences."
     ),
     model="gpt-4o-mini",

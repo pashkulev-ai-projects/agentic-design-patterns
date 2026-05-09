@@ -19,7 +19,7 @@ async def main():
     with trace("Handoffs Demo"):
         agent_response: RunResult = await Runner.run(triage_agent, prompt)
 
-    print(f"\nFinal response:\n{agent_response}")
+    print(f"\nAgent Response:\n{agent_response.final_output}")
 
     display_token_usage(agent_response)
 
