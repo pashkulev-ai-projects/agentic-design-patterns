@@ -9,7 +9,7 @@ load_dotenv(override=True)
 
 
 async def main():
-    prompt = "On-site work is strictly better than remote work."
+    prompt = "On-site work is NOT strictly better than remote work."
     agent_response = Runner.run_streamed(devils_advocate_agent, prompt)
 
     print("=" * 100)

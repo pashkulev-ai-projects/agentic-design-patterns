@@ -1,6 +1,7 @@
 import os
 import resend
 from agents import function_tool
+from demo.utils.svg_assets import inject_svg_assets
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
@@ -18,7 +19,7 @@ def send_email(subject: str, content: str) -> str:
         "from": FROM_EMAIL,
         "to": [TO_EMAIL],
         "subject": subject,
-        "html": content
+        "html": inject_svg_assets(content)
     }
     email = resend.Emails.send(params)
     return f"Email sent successfully. ID: {email['id']}"

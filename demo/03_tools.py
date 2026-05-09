@@ -18,7 +18,7 @@ async def main():
     with trace("Research Assistant Demo", trace_id=trace_id):
         agent_response: RunResult = await Runner.run(research_assistant_agent, prompt)
 
-    print(f"Agent response:\n{agent_response.final_output}")
+    print(f"Agent response: {agent_response.final_output}")
 
     display_token_usage(agent_response)
 

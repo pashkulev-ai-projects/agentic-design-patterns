@@ -1,12 +1,12 @@
 import asyncio
-from agents import Runner
+from agents import Runner, RunResult
 from demo.my_agents import devils_advocate_agent
 from demo.utils import display_token_usage
 
 
 async def main():
-    prompt = "AI agents will replace developers"
-    agent_response = await Runner.run(devils_advocate_agent, prompt)
+    prompt = "AI agents NOT will replace developers"
+    agent_response: RunResult = await Runner.run(devils_advocate_agent, prompt)
 
     print("=" * 100)
     print(f"User prompt: {prompt}")

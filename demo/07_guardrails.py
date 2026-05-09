@@ -54,6 +54,7 @@ async def main():
     # Scenario 2: Buggy code with hardcoded secrets → output guardrail blocks
     await run_pipeline("buggy_python.py", (ASSETS_DIR / "buggy_python.py").read_text())
 
+
     # Scenario 3: Clean code → both guardrails pass → email sent
     await run_pipeline("CleanBankAccount.java", (ASSETS_DIR / "CleanBankAccount.java").read_text())
 

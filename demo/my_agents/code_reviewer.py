@@ -51,8 +51,10 @@ code_reviewer_agent = Agent(
         "language, an overall quality score from 1 to 10, a concise summary, "
         "a list of issues each with the exact problematic code snippet as context, severity, description and suggested fix, "
         "positive aspects of the code, and a final verdict. "
-        "Severity guidelines: security vulnerabilities (SQL injection, plain text passwords, etc.) are always 'critical'; "
+        "Severity guidelines: security vulnerabilities (SQL injection, hardcoded credentials/API keys/secrets, plain text passwords, etc.) are always 'critical'; "
         "bad practices with side effects are 'warning'; style and minor improvements are 'suggestion'. "
+        "For each hardcoded credential or secret, include the full line (variable name AND its literal value) verbatim as the code_snippet. "
+        "Verdict: 'approve' when the code is ready to merge as-is, even if minor suggestions are noted; 'request_changes' when specific changes must be addressed before merging; 'reject' when critical issues are unresolved. "
         "You will receive the raw code to review directly as the message."
     ),
     output_type=CodeReview,
