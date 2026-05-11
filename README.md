@@ -239,18 +239,6 @@ Resend requires a verified domain to send emails from your own address. This inv
 
 > **Don't want to use Mistral?** In `demo/my_agents/unit_testing/test_evaluator.py`, replace `OpenAIChatCompletionsModel` with `model="gpt-4o-mini"` and remove the Mistral client. The evaluator-optimizer loop will work identically.
 
-### Ollama (local model)
-1. Install Ollama from [ollama.com](https://ollama.com)
-2. Pull the model:
-
-```bash
-ollama pull deepseek-r1:8b
-```
-
-3. Make sure Ollama is running before executing demo 09
-
-> **Don't want to use Ollama?** In `demo/my_agents/unit_testing/test_generator.py`, replace `OpenAIChatCompletionsModel` with `model="gpt-4o-mini"` and remove the Ollama client. No other changes needed.
-
 ---
 
 ## Project Setup
@@ -258,8 +246,8 @@ ollama pull deepseek-r1:8b
 ### 1. Clone the repository
 
 ```bash
-git clone <repo-url>
-cd <repo-folder>
+git clone https://github.com/pashkulev-ai-projects/agentic-design-patterns.git
+cd agentic-design-patterns
 ```
 
 ### 2. Create your `.env` file
@@ -278,6 +266,19 @@ uv sync
 ```
 
 This creates a `.venv` and installs all dependencies from `pyproject.toml`.
+
+### 4. Install Ollama (demo 09 only)
+
+1. Install Ollama from [ollama.com](https://ollama.com)
+2. Pull the model:
+
+```bash
+ollama pull deepseek-r1:8b
+```
+
+3. Make sure Ollama is running before executing demo 09
+
+> **Don't want to use Ollama?** In `my_agents/unit_testing/test_generator.py`, replace `OpenAIChatCompletionsModel` with `model="gpt-4o-mini"` and remove the Ollama client. No other changes needed.
 
 ---
 
