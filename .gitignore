@@ -16,8 +16,7 @@ wheels/
 .env
 
 # Project-specific excludes
-assets/
 scripts/
 *.pptx
 commit.md
-demo/memory_demo.db
+memory_demo.db

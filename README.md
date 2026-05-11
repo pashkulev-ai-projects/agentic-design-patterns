@@ -284,16 +284,16 @@ This creates a `.venv` and installs all dependencies from `pyproject.toml`.
 ## Running the Demos
 
 ```bash
-uv run python -m demo.01_agents
-uv run python -m demo.02_agents_streamed_response
-uv run python -m demo.03_tools
-uv run python -m demo.04_agents_as_tools
-uv run python -m demo.05_handoffs
-uv run python -m demo.06_structured_outputs
-uv run python -m demo.07_guardrails
-uv run python -m demo.08_parallelization
-uv run python -m demo.09_evaluator_optimizer
-uv run python -m demo.10_state_and_memory
+uv run python -m 01_agents
+uv run python -m 02_agents_streamed_response
+uv run python -m 03_tools
+uv run python -m 04_agents_as_tools
+uv run python -m 05_handoffs
+uv run python -m 06_structured_outputs
+uv run python -m 07_guardrails
+uv run python -m 08_parallelization
+uv run python -m 09_evaluator_optimizer
+uv run python -m 10_state_and_memory
 ```
 
 All runs are traced. Open the [OpenAI Traces dashboard](https://platform.openai.com/traces)
