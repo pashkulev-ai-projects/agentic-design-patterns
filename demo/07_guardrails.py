@@ -2,12 +2,9 @@
 Guardrails — Input & Output Protection in a Prompt Chaining Pipeline
 """
 import asyncio
-from pathlib import Path
 from agents import Runner, trace, InputGuardrailTripwireTriggered, OutputGuardrailTripwireTriggered
 from demo.my_agents import frontend_developer_agent, email_sender_agent, guarded_reviewer_agent
-from demo.utils import display_token_usage
-
-ASSETS_DIR = Path(__file__).parent / "assets" / "code_review"
+from demo.utils import display_token_usage, get_source_code
 
 
 async def run_pipeline(label: str, code: str) -> None:
@@ -49,14 +46,16 @@ async def run_pipeline(label: str, code: str) -> None:
 
 async def main():
     # Scenario 1: Prompt injection attempt embedded in code → input guardrail blocks
-    await run_pipeline("injection_python.py", (ASSETS_DIR / "injection_python.py").read_text())
+    code = get_source_code("injection_python.py")
+    await run_pipeline("injection_python.py", code)
 
     # Scenario 2: Buggy code with hardcoded secrets → output guardrail blocks
-    await run_pipeline("buggy_python.py", (ASSETS_DIR / "buggy_python.py").read_text())
-
+    code = get_source_code("buggy_python.py")
+    await run_pipeline("buggy_python.py", code)
 
     # Scenario 3: Clean code → both guardrails pass → email sent
-    await run_pipeline("CleanBankAccount.java", (ASSETS_DIR / "CleanBankAccount.java").read_text())
+    code = get_source_code("CleanBankAccount.java")
+    await run_pipeline("CleanBankAccount.java", code)
 
 
 if __name__ == "__main__":

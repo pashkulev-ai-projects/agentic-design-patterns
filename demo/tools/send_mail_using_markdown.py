@@ -8,8 +8,8 @@ load_dotenv(override=True)
 
 resend.api_key = os.environ["RESEND_API_KEY"]
 
-FROM_EMAIL = "ivan@ivanpashkulev.com"
-TO_EMAIL = "ivan.pashkulev@ict.eu"
+FROM_EMAIL = os.environ["EMAIL_FROM"]
+TO_EMAIL = os.environ["EMAIL_TO"]
 
 
 @function_tool

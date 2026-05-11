@@ -2,30 +2,31 @@
 Prompt Chaining Workflow Pattern
 """
 import asyncio
-from pathlib import Path
 from agents import Runner, trace
 from demo.my_agents import code_reviewer_agent, frontend_developer_agent, email_sender_agent
-from demo.utils import display_token_usage
+from demo.my_agents.code_review.code_reviewer import CodeReview
+from demo.utils import display_token_usage, generate_trace_id, get_source_code
 
 
 async def review_file(file_name: str) -> None:
-    code_review_dir = Path(__file__).parent / "assets" / "code_review"
-    file_path = code_review_dir / file_name
-    code = file_path.read_text()
+    trace_id = generate_trace_id()
+    code = get_source_code(file_name)
 
-    with trace("Code Review Demo"):
+    with trace(workflow_name="Code Review Demo", trace_id=trace_id):
         # Review agent call
         review_agent_response = await Runner.run(code_reviewer_agent, code)
-        print(f"Code Review Response type: {type(review_agent_response.final_output)}")
+        code_review: CodeReview = review_agent_response.final_output
+        print(f"Code Review Response type: {type(code_review)}")
         display_token_usage(review_agent_response)
 
         # Frontend agent call
-        code_review_json = review_agent_response.final_output.model_dump_json()
+        code_review_json = code_review.model_dump_json()
         frontend_agent_response = await Runner.run(frontend_developer_agent, code_review_json)
         display_token_usage(frontend_agent_response)
 
         # Send Email Agent call
-        email_agent_response = await Runner.run(email_sender_agent, frontend_agent_response.final_output)
+        html_content = frontend_agent_response.final_output
+        email_agent_response = await Runner.run(email_sender_agent, html_content)
         display_token_usage(email_agent_response)
 
     print("=" * 100)

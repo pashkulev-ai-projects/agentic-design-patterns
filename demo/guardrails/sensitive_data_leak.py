@@ -5,7 +5,7 @@ from agents import (
     RunContextWrapper,
     output_guardrail,
 )
-from demo.my_agents.leak_detector import leak_detector_agent
+from demo.my_agents.guardrails.leak_detector import leak_detector_agent
 
 
 @output_guardrail

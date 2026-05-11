@@ -2,8 +2,8 @@ from agents import Agent
 from demo.my_agents import billing_agent, tech_support_agent
 
 
-triage_agent = Agent(
-    name="Support_Triage",
+router_agent = Agent(
+    name="Routing_Agent",
     instructions=(
         f"You are the first point of contact for CloudDesk customer support. "
         "Your only job is to immediately route the customer to the correct specialist. "

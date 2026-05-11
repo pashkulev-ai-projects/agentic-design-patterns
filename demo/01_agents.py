@@ -6,7 +6,7 @@ from demo.utils import display_token_usage
 
 async def main():
     prompt = "AI agents NOT will replace developers"
-    agent_response: RunResult = await Runner.run(devils_advocate_agent, prompt)
+    agent_response: RunResult = await Runner.run(starting_agent=devils_advocate_agent, input=prompt)
 
     print("=" * 100)
     print(f"User prompt: {prompt}")

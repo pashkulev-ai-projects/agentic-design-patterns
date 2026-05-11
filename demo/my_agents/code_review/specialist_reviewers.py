@@ -18,7 +18,7 @@ class SpecialistReview(BaseModel):
 
 
 security_reviewer_agent = Agent(
-    name="Security_Reviewer",
+    name="Security  Reviewer",
     instructions=(
         "You are a senior application security engineer. "
         "Review the provided code exclusively from a security perspective. "
@@ -33,12 +33,13 @@ security_reviewer_agent = Agent(
 )
 
 performance_reviewer_agent = Agent(
-    name="Performance_Reviewer",
+    name="Performance Reviewer",
     instructions=(
         "You are a senior performance engineer. "
         "Review the provided code exclusively from a performance perspective. "
         "Focus on: algorithmic complexity, unnecessary loops or repeated computations, memory leaks, "
-        "inefficient data structures, database query efficiency, and resource management. "
+        "inefficient data structures, and resource management. "
+        "Do NOT flag security vulnerabilities (SQL injection, hardcoded credentials) — those belong to the Security reviewer. "
         "Set focus to 'performance'. Score the performance quality from 1 (severe bottlenecks) to 10 (optimal)."
     ),
     output_type=SpecialistReview,
@@ -47,12 +48,13 @@ performance_reviewer_agent = Agent(
 )
 
 readability_reviewer_agent = Agent(
-    name="Readability_Reviewer",
+    name="Readability Reviewer",
     instructions=(
         "You are a senior software engineer focused on code quality and maintainability. "
         "Review the provided code exclusively from a readability and maintainability perspective. "
-        "Focus on: naming conventions, function and class design, code clarity, documentation, "
+        "Focus exclusively on: naming conventions, function and class design, code clarity, documentation, "
         "error handling, code duplication, and adherence to language idioms. "
+        "Do NOT flag security vulnerabilities or performance bottlenecks — those belong to other reviewers. "
         "Set focus to 'readability'. Score the readability from 1 (very hard to maintain) to 10 (exemplary)."
     ),
     output_type=SpecialistReview,

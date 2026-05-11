@@ -1,18 +1,19 @@
 """
-Parallelization Pattern — Multiple specialist agents running concurrently
+Parallelization Pattern — Multiple specialist my_agents running concurrently
 """
 import asyncio
 import json
 import time
 from pathlib import Path
 from agents import Runner, trace
-from demo.my_agents.specialist_reviewers import (
+from demo.my_agents.code_review.specialist_reviewers import (
     security_reviewer_agent,
     performance_reviewer_agent,
     readability_reviewer_agent,
     SpecialistReview,
 )
-from demo.my_agents.review_aggregator import review_aggregator_agent, AggregatedReport
+from demo.my_agents.code_review.review_aggregator import review_aggregator_agent, AggregatedReport
+from demo.my_agents import frontend_developer_agent, email_sender_agent
 from demo.utils import display_token_usage
 
 ASSETS_DIR = Path(__file__).parent / "assets" / "code_review"
@@ -58,7 +59,24 @@ async def review_parallel(file_name: str) -> None:
         display_token_usage(agg_response)
         report: AggregatedReport = agg_response.final_output
 
-    # --- Final report ---
+        # --- Email phase ---
+        print("\n[Email] Designing and sending full report...")
+        full_report = json.dumps({
+            "file": file_name,
+            "aggregated": report.model_dump(),
+            "specialists": {
+                "security": security_review.model_dump(),
+                "performance": performance_review.model_dump(),
+                "readability": readability_review.model_dump(),
+            }
+        })
+        frontend_response = await Runner.run(frontend_developer_agent, full_report)
+        display_token_usage(frontend_response)
+
+        email_response = await Runner.run(email_sender_agent, frontend_response.final_output)
+        display_token_usage(email_response)
+
+    # --- Console summary ---
     print(f"\n{'─' * 80}")
     print(f"AGGREGATED REPORT")
     print(f"{'─' * 80}")
@@ -72,6 +90,7 @@ async def review_parallel(file_name: str) -> None:
     for i, issue in enumerate(report.top_issues, 1):
         print(f"  {i}. {issue}")
     print(f"\nTotal wall-clock time (parallel phase): {parallel_time:.1f}s")
+    print(f"Email sent successfully.")
 
 
 async def main():

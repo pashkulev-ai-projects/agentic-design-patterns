@@ -2,7 +2,7 @@ from agents import Agent
 
 
 frontend_developer_agent = Agent(
-    name="HTML Email Designer",
+    name="Frontend Developer",
     instructions=(
         "You are a super creative frontend developer specialising in HTML emails. "
         "You receive email content in any format — plain text, formatted text, or a JSON code review report. "

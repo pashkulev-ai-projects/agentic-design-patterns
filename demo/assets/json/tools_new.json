@@ -1,0 +1,48 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "web_search",
+      "description": "Search the web for any topic and return a summary of the top results.",
+      "parameters": {
+        "properties": {
+          "query": {
+            "title": "Query",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "web_search_args",
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "send_email",
+      "description": "Send an email to the configured recipient with the given subject and content.",
+      "parameters": {
+        "properties": {
+          "subject": {
+            "title": "Subject",
+            "type": "string"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          }
+        },
+        "required": [
+          "subject",
+          "content"
+        ],
+        "title": "send_email_args",
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  }]

@@ -20,7 +20,7 @@ class AggregatedReport(BaseModel):
 
 
 review_aggregator_agent = Agent(
-    name="Review_Aggregator",
+    name="Review Aggregator",
     instructions=(
         "You are a senior engineering lead. "
         "You receive three specialist code reviews (security, performance, readability) as a JSON array. "

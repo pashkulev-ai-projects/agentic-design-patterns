@@ -3,7 +3,6 @@ from agents import Agent
 from demo.tools import web_search
 from demo.tools.send_mail_using_markdown import send_email
 
-
 research_assistant_agent = Agent(
     name="Research Assistant",
     instructions=(
@@ -15,7 +14,7 @@ research_assistant_agent = Agent(
         "   - 3-5 key findings or developments as a consistently numbered list (1. 2. 3. etc.), each with a short explanation.\n"
         "   - A closing thought on why this matters.\n"
         "   - Sign off with 'Best Regards, your AI Research Assistant'.\n"
-        "3. Send the email using with a descriptive subject line."
+        "3. Send the email using send_email tool with a descriptive subject line."
     ),
     tools=[web_search, send_email],
     model="gpt-4o-mini",

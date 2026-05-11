@@ -1,21 +1,22 @@
 """
-Orchestration Worker workflow pattern
+Orchestration Worker workflow
 """
 import asyncio
 from agents import Runner, trace
-from demo.my_agents.research_assistant_orchestrator import research_assistant_orchestrator_agent
-from demo.utils import display_token_usage
+from demo.my_agents.research.research_assistant_orchestrator import research_assistant_orchestrator_agent
+from demo.utils import display_token_usage, generate_trace_id
 
 
 async def main():
+    trace_id = generate_trace_id()
     prompt = "Search for what's new in the OpenAI Agents SDK in 2026 and send me a summary email."
-    print("=" * 100)
-    print(f"User prompt: {prompt}\n")
 
-    with trace("Agents as Tools Demo"):
+    print(f"User prompt: {prompt}")
+
+    with trace(workflow_name="Agents as Tools Demo", trace_id=trace_id):
         result = await Runner.run(research_assistant_orchestrator_agent, prompt, max_turns=6)
 
-    print(f"Agent response:\n{result.final_output}")
+    print(f"Agent response: {result.final_output}")
 
     display_token_usage(result)
 

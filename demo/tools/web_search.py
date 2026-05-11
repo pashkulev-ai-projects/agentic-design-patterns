@@ -19,6 +19,6 @@ def web_search(query: str) -> str:
     results = response.json().get("organic", [])
 
     return "\n\n".join(
-        f"{r['title']}\n{r['link']}\n{r.get('snippet', '')}"
-        for r in results
+        f"{result['title']}\n{result['link']}\n{result.get('snippet', '')}"
+        for result in results
     )

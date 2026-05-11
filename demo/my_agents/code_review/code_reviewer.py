@@ -20,31 +20,9 @@ class CodeReview(BaseModel):
     positive_aspects: list[str]
     verdict: Literal["approve", "request_changes", "reject"]
 
-    def __str__(self):
-        review_output = f"Language: {self.language}\n"
-        review_output += f"Overall Score: {self.overall_score}\n"
-        review_output += f"Verdict: {self.verdict.upper()}\n\n"
-        review_output += f"Summary:\n"
-        review_output += f"{self.summary}\n\n"
-
-        if self.positive_aspects:
-            review_output += f"Positive aspects:\n"
-            for point in self.positive_aspects:
-                review_output += f"  + {point}\n"
-
-        if self.issues:
-            f"\nIssues found ({len(self.issues)}):\n"
-            for issue in self.issues:
-                review_output += f"  [{issue.severity.upper()}] `{issue.code_snippet}`: {issue.description}\n"
-                review_output += f"    Fix: {issue.fix}\n"
-
-        return review_output
-
-
-# --- Agent ---
 
 code_reviewer_agent = Agent(
-    name="Code_Reviewer",
+    name="Code Reviewer",
     instructions=(
         "You are a senior software engineer conducting thorough code reviews. "
         "Analyse the provided code carefully and return a structured review covering: "

@@ -1,6 +1,6 @@
 from datetime import date
 from agents import Agent
-from demo.my_agents.frontend_developer import frontend_developer_agent
+from demo.my_agents.common.frontend_developer import frontend_developer_agent
 from demo.tools import web_search, send_email
 
 

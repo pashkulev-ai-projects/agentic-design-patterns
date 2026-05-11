@@ -5,7 +5,7 @@ from agents import (
     RunContextWrapper,
     input_guardrail,
 )
-from demo.my_agents.injection_detector import injection_detector_agent
+from demo.my_agents.guardrails.injection_detector import injection_detector_agent
 
 
 @input_guardrail
