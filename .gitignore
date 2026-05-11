@@ -9,6 +9,9 @@ wheels/
 # Virtual environments
 .venv
 
+# IDE
+.idea/
+
 # Environment variables
 .env
 
