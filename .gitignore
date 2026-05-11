@@ -19,4 +19,5 @@ wheels/
 assets/
 scripts/
 *.pptx
+commit.md
 demo/memory_demo.db

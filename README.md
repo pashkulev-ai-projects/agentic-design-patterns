@@ -1,14 +1,18 @@
-# OpenAI Agents SDK — Complete Workshop
+# Agentic Design Patterns using OpenAI Agents SDK
 
-A production-grade, hands-on exploration of the **OpenAI Agents SDK** that goes beyond
-documenting individual features. Each demo is a working system built around a real-world
-scenario — and together they cover every major **agentic workflow design pattern** in use today.
+A hands-on exploration of the **OpenAI Agents SDK** that goes beyond documenting individual
+features. Each demo is built around a real-world scenario, and together they cover every major
+**agentic workflow design pattern** in use today — making the concepts applicable to any
+agentic framework, not just OpenAI.
 
 ---
 
-## What makes this different
+## Overview
 
-Most SDK demos show one concept in isolation. This project is different:
+This project implements all major agentic workflow design patterns using the OpenAI Agents SDK.
+Rather than isolated feature demos, each example is a complete pipeline built around a realistic
+scenario — code review, customer support routing, research automation, and iterative unit test
+generation. The patterns covered here are framework-agnostic.
 
 - **10 progressive demos** — from a single agent to a multi-agent parallel pipeline
 - **Every core SDK concept** covered: agents, tools, streaming, tracing, structured outputs, guardrails, handoffs, parallelization, and persistent memory
@@ -193,39 +197,59 @@ Two approaches compared side by side:
 
 ## Prerequisites
 
-- Python 3.12+
-- [uv](https://docs.astral.sh/uv/getting-started/installation/) package manager
-- An OpenAI API key (see setup below)
-- [Ollama](https://ollama.com) with `deepseek-r1:8b` pulled — only for demo 09
+| Requirement | Used in | Notes |
+|---|---|---|
+| Python 3.12+ | All | |
+| [uv](https://docs.astral.sh/uv/getting-started/installation/) | All | Package manager |
+| OpenAI API key | All | See setup below |
+| Serper API key | 03, 04 | Web search tool |
+| Resend account + verified domain | 03, 04, 06, 07, 08 | Email delivery — see setup below |
+| Mistral API key | 09 | Evaluator model |
+| Ollama + deepseek-r1:8b | 09 | Generator model |
 
 ---
 
-## OpenAI Account Setup
+## Account Setup
 
+### OpenAI
 1. Go to [platform.openai.com](https://platform.openai.com) and create an account
 2. Navigate to **Settings → Billing** and add a payment method
-3. Top up a minimum of **$10** — this covers all workshop demos comfortably
+3. Top up a minimum of **$10** — this covers all demos comfortably
 4. Go to **Dashboard → API Keys** and click **Create new secret key**
 5. Copy the key immediately — you will not be able to see it again
 
----
+### Serper (web search)
+1. Create a free account at [serper.dev](https://serper.dev)
+2. Copy your API key from the dashboard — the free tier includes 2,500 queries
 
-## Resend Account Setup
-
-Demos 03, 04, 06, 07, and 08 send real emails via the [Resend](https://resend.com) API.
+### Resend (email)
+Resend requires a verified domain to send emails from your own address. This involves adding DNS records to your domain provider (TXT and MX records). The process takes 5–10 minutes but requires domain access.
 
 1. Create a free account at [resend.com](https://resend.com)
-2. Add and verify your domain under **Domains** (required to send from your own address)
-3. Go to **API Keys** and create a new key
-4. Add the key and your email addresses to `.env`:
+2. Go to **Domains** → add your domain → follow the DNS verification steps
+3. Once verified, go to **API Keys** and create a new key
+4. Set `EMAIL_FROM` to an address on your verified domain (e.g. `you@yourdomain.com`)
 
-```
-RESEND_API_KEY=re_...
-EMAIL_FROM=you@yourdomain.com   # must match your verified domain
-EMAIL_TO=recipient@example.com
+> **Don't want to set up Resend?** You can skip the email step by commenting out the email agent call at the end of each affected demo. The rest of the pipeline (review, aggregation, formatting) will still run and print results to the console.
+
+### Mistral
+1. Create an account at [console.mistral.ai](https://console.mistral.ai)
+2. Go to **API Keys** and generate a new key
+3. Add billing — the `mistral-large-latest` model is pay-per-use
+
+> **Don't want to use Mistral?** In `demo/my_agents/unit_testing/test_evaluator.py`, replace `OpenAIChatCompletionsModel` with `model="gpt-4o-mini"` and remove the Mistral client. The evaluator-optimizer loop will work identically.
+
+### Ollama (local model)
+1. Install Ollama from [ollama.com](https://ollama.com)
+2. Pull the model:
+
+```bash
+ollama pull deepseek-r1:8b
 ```
 
-> The free Resend plan allows 3,000 emails/month and 100/day — more than enough for the workshop.
+3. Make sure Ollama is running before executing demo 09
+
+> **Don't want to use Ollama?** In `demo/my_agents/unit_testing/test_generator.py`, replace `OpenAIChatCompletionsModel` with `model="gpt-4o-mini"` and remove the Ollama client. No other changes needed.
 
 ---
 
@@ -254,12 +278,6 @@ uv sync
 ```
 
 This creates a `.venv` and installs all dependencies from `pyproject.toml`.
-
-### 4. (Optional) Pull Deepseek R1 for demo 09
-
-```bash
-ollama pull deepseek-r1:8b
-```
 
 ---
 
@@ -292,4 +310,4 @@ to inspect every LLM call, tool invocation, token count, and timing.
 | `pydantic` | Structured outputs and data validation |
 | `python-dotenv` | `.env` file loading |
 | `resend` | Email delivery (demos 03, 04, 06, 07, 08) |
-| `fastapi` + `httpx` | Webhook and API support |
+| `httpx` | Async HTTP client (web search tool) |

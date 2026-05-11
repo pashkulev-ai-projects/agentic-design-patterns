@@ -75,8 +75,8 @@ async def demo_persistent_memory() -> None:
 
 async def main() -> None:
     with trace("State & Memory Demo"):
-        # await demo_in_thread_state()
-        await demo_persistent_memory()
+        await demo_in_thread_state()
+        # await demo_persistent_memory()
 
 
 if __name__ == "__main__":

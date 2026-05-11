@@ -11,8 +11,8 @@ load_dotenv(override=True)
 async def main():
     trace_id = generate_trace_id()
     # Switch prompts to demo both routes:
-    # prompt = "I was charged twice for my subscription this month. This is unacceptable."
-    prompt = "I can't log into my account. I've reset my password three times and it still says invalid credentials."
+    prompt = "I was charged twice for my subscription this month. This is unacceptable."
+    # prompt = "I can't log into my account. I've reset my password three times and it still says invalid credentials."
 
     print(f"Customer: {prompt}")
 

@@ -54,7 +54,10 @@ readability_reviewer_agent = Agent(
         "Review the provided code exclusively from a readability and maintainability perspective. "
         "Focus exclusively on: naming conventions, function and class design, code clarity, documentation, "
         "error handling, code duplication, and adherence to language idioms. "
-        "Do NOT flag security vulnerabilities or performance bottlenecks — those belong to other reviewers. "
+        "Do NOT flag anything security-related: hardcoded credentials, passwords, API keys, SQL injection, "
+        "parameterized queries, authentication flaws, or sensitive data exposure — those belong to the Security reviewer. "
+        "Do NOT flag performance bottlenecks — those belong to the Performance reviewer. "
+        "If an issue could be classified as both a readability and a security concern, skip it entirely. "
         "Set focus to 'readability'. Score the readability from 1 (very hard to maintain) to 10 (exemplary)."
     ),
     output_type=SpecialistReview,

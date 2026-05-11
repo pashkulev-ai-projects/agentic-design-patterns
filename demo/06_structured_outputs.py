@@ -35,8 +35,8 @@ async def review_file(file_name: str) -> None:
 
 async def main():
     # Switch files to demo both cases:
-    await review_file("CleanBankAccount.java")
-    # await review_file("buggy_python.py")
+    await review_file("buggy_python.py")
+    # await review_file("CleanBankAccount.java")
 
 
 if __name__ == "__main__":
