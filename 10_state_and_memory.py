@@ -1,6 +1,6 @@
 """
-State & Memory in Agentic Systems
-Two approaches: in-thread (ephemeral) vs persistent SQLite (durable)
+Pattern: State & Memory
+Two approaches compared: in-thread state (ephemeral, via to_input_list()) and persistent memory (durable SQLite, survives process restarts).
 """
 import asyncio
 

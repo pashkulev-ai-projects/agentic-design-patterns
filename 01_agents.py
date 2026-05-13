@@ -6,13 +6,16 @@ from utils import display_token_usage
 
 async def main():
     prompt = "AI agents will replace developers"
-    agent_response: RunResult = await Runner.run(starting_agent=devils_advocate_agent, input=prompt)
+    result: RunResult = await Runner.run(
+        starting_agent=devils_advocate_agent,
+        input=prompt
+    )
 
     print("=" * 100)
     print(f"User prompt: {prompt}")
-    print(f"Agent response: {agent_response.final_output}")
+    print(f"Agent response: {result.final_output}")
 
-    display_token_usage(agent_response)
+    display_token_usage(result)
 
 
 if __name__ == "__main__":

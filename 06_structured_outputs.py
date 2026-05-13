@@ -1,5 +1,6 @@
 """
-Prompt Chaining Workflow Pattern
+Pattern: Prompt Chaining
+Each agent's output becomes the next agent's input: Code Reviewer → Frontend Developer → Email Sender.
 """
 import asyncio
 from agents import Runner, trace
@@ -14,19 +15,28 @@ async def review_file(file_name: str) -> None:
 
     with trace(workflow_name="Code Review Demo", trace_id=trace_id):
         # Review agent call
-        review_agent_response = await Runner.run(code_reviewer_agent, code)
+        review_agent_response = await Runner.run(
+            starting_agent=code_reviewer_agent,
+            input=code
+        )
         code_review: CodeReview = review_agent_response.final_output
         print(f"Code Review Response type: {type(code_review)}")
         display_token_usage(review_agent_response)
 
         # Frontend agent call
         code_review_json = code_review.model_dump_json()
-        frontend_agent_response = await Runner.run(frontend_developer_agent, code_review_json)
+        frontend_agent_response = await Runner.run(
+            starting_agent=frontend_developer_agent,
+            input=code_review_json
+        )
         display_token_usage(frontend_agent_response)
 
         # Send Email Agent call
         html_content = frontend_agent_response.final_output
-        email_agent_response = await Runner.run(email_sender_agent, html_content)
+        email_agent_response = await Runner.run(
+            starting_agent=email_sender_agent,
+            input=html_content
+        )
         display_token_usage(email_agent_response)
 
     print("=" * 100)

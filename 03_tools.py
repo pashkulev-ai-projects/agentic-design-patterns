@@ -13,12 +13,15 @@ async def main():
 
     print(f"User prompt: {prompt}")
 
-    with trace("Research Assistant Demo", trace_id=trace_id):
-        agent_response: RunResult = await Runner.run(research_assistant_agent, prompt)
+    with trace(workflow_name="Research Assistant Demo", trace_id=trace_id):
+        result: RunResult = await Runner.run(
+            starting_agent=research_assistant_agent,
+            input=prompt
+        )
 
-    print(f"Agent response: {agent_response.final_output}")
+    print(f"Agent response: {result.final_output}")
 
-    display_token_usage(agent_response)
+    display_token_usage(result)
 
 
 if __name__ == "__main__":

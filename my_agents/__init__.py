@@ -12,3 +12,10 @@ from my_agents.guardrails.injection_detector import injection_detector_agent
 from my_agents.guardrails.leak_detector import leak_detector_agent
 from my_agents.memory.thread_assistant import thread_assistant_agent
 from my_agents.memory.memory_assistant import memory_assistant_agent
+from my_agents.code_review.review_aggregator import review_aggregator_agent, AggregatedReport
+from my_agents.code_review.specialist_reviewers import (
+    SpecialistReview,
+    security_reviewer_agent,
+    performance_reviewer_agent,
+    readability_reviewer_agent
+)

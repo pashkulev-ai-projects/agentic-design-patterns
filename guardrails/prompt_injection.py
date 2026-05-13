@@ -5,11 +5,15 @@ from agents import (
     RunContextWrapper,
     input_guardrail,
 )
-from my_agents.guardrails.injection_detector import injection_detector_agent
+from my_agents.guardrails.injection_detector import injection_detector_agent, InjectionCheck
 
 
 @input_guardrail
 async def prompt_injection_guardrail(ctx: RunContextWrapper, agent: Agent, user_input: str) -> GuardrailFunctionOutput:
-    result = await Runner.run(injection_detector_agent, user_input, context=ctx.context)
-    check = result.final_output
+    result = await Runner.run(
+        starting_agent=injection_detector_agent,
+        input=user_input,
+        context=ctx.context
+    )
+    check: InjectionCheck = result.final_output
     return GuardrailFunctionOutput(output_info=check, tripwire_triggered=check.is_injection)

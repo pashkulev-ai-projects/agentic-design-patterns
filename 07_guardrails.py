@@ -1,9 +1,12 @@
 """
-Guardrails — Input & Output Protection in a Prompt Chaining Pipeline
+Pattern: Prompt Chaining with Guardrails
+Input guardrail blocks prompt injection attempts;
+Output guardrail blocks sensitive data leakage before output passes downstream.
 """
 import asyncio
 from agents import Runner, trace, InputGuardrailTripwireTriggered, OutputGuardrailTripwireTriggered
 from my_agents import frontend_developer_agent, email_sender_agent, guarded_reviewer_agent
+from my_agents.code_review.code_reviewer import CodeReview
 from utils import display_token_usage, get_source_code
 
 
@@ -15,18 +18,25 @@ async def run_pipeline(label: str, code: str) -> None:
     try:
         with trace("Guardrails Demo"):
             # Step 1 — Code Reviewer (guarded)
-            review_response = await Runner.run(guarded_reviewer_agent, code)
+            review_response = await Runner.run(
+                starting_agent=guarded_reviewer_agent,
+                input=code
+            )
+            code_review: CodeReview = review_response.final_output
             display_token_usage(review_response)
 
             # Step 2 — Frontend Developer
             frontend_response = await Runner.run(
-                frontend_developer_agent,
-                review_response.final_output.model_dump_json()
+                starting_agent=frontend_developer_agent,
+                input=code_review.model_dump_json()
             )
             display_token_usage(frontend_response)
 
             # Step 3 — Email Sender
-            email_response = await Runner.run(email_sender_agent, frontend_response.final_output)
+            email_response = await Runner.run(
+                starting_agent=email_sender_agent,
+                input=frontend_response.final_output
+            )
             display_token_usage(email_response)
 
         print(f"✓ Pipeline completed. Email sent successfully.")

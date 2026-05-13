@@ -1,5 +1,7 @@
 """
-Orchestration Worker workflow
+Pattern: Orchestrator-Worker
+Specialist sub-agents exposed as tools via .as_tool();
+Control returns to the orchestrator after each sub-agent completes.
 """
 import asyncio
 from agents import Runner, trace
@@ -14,7 +16,10 @@ async def main():
     print(f"User prompt: {prompt}")
 
     with trace(workflow_name="Agents as Tools Demo", trace_id=trace_id):
-        result = await Runner.run(research_assistant_orchestrator_agent, prompt, max_turns=6)
+        result = await Runner.run(
+            starting_agent=research_assistant_orchestrator_agent,
+            input=prompt
+        )
 
     print(f"Agent response: {result.final_output}")
 

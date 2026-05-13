@@ -1,19 +1,23 @@
 """
-Parallelization Pattern — Multiple specialist my_agents running concurrently
+Pattern: Parallelization
+Specialist agents run concurrently via asyncio.gather();
+Results are aggregated sequentially by a dedicated aggregator agent.
 """
 import asyncio
 import json
 import time
 from pathlib import Path
 from agents import Runner, trace
-from my_agents.code_review.specialist_reviewers import (
+from my_agents import (
     security_reviewer_agent,
     performance_reviewer_agent,
     readability_reviewer_agent,
     SpecialistReview,
+    review_aggregator_agent,
+    AggregatedReport,
+    frontend_developer_agent,
+    email_sender_agent
 )
-from my_agents.code_review.review_aggregator import review_aggregator_agent, AggregatedReport
-from my_agents import frontend_developer_agent, email_sender_agent
 from utils import display_token_usage
 
 ASSETS_DIR = Path(__file__).parent / "assets" / "code_review"
@@ -21,7 +25,7 @@ ASSETS_DIR = Path(__file__).parent / "assets" / "code_review"
 
 async def run_specialist(agent, code: str, label: str) -> SpecialistReview:
     print(f"  → [{label}] starting...")
-    response = await Runner.run(agent, code)
+    response = await Runner.run(starting_agent=agent, input=code)
     display_token_usage(response)
     print(f"  ✓ [{label}] done — score: {response.final_output.score}/10, issues: {len(response.final_output.issues)}")
     return response.final_output
@@ -55,7 +59,10 @@ async def review_parallel(file_name: str) -> None:
             performance_review.model_dump(),
             readability_review.model_dump(),
         ])
-        agg_response = await Runner.run(review_aggregator_agent, reviews_json)
+        agg_response = await Runner.run(
+            starting_agent=review_aggregator_agent,
+            input=reviews_json
+        )
         display_token_usage(agg_response)
         report: AggregatedReport = agg_response.final_output
 
@@ -70,10 +77,18 @@ async def review_parallel(file_name: str) -> None:
                 "readability": readability_review.model_dump(),
             }
         })
-        frontend_response = await Runner.run(frontend_developer_agent, full_report)
+        # Call Frontend Developer
+        frontend_response = await Runner.run(
+            starting_agent=frontend_developer_agent,
+            input=full_report
+        )
         display_token_usage(frontend_response)
 
-        email_response = await Runner.run(email_sender_agent, frontend_response.final_output)
+        # Call Email Agent
+        email_response = await Runner.run(
+            starting_agent=email_sender_agent,
+            input=frontend_response.final_output
+        )
         display_token_usage(email_response)
 
     # --- Console summary ---

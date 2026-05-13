@@ -1,7 +1,7 @@
 """
-Evaluator-Optimizer Pattern — Iterative unit test generation with multi-model pipeline
-Generator : Deepseek R1:8b (local, Ollama)
-Evaluator : mistral-large-latest (cloud, Mistral)
+Pattern: Evaluator-Optimizer
+Generator and evaluator loop iteratively until a quality threshold is met or max iterations are reached.
+Generator: Deepseek R1:8b (local, Ollama) — Evaluator: mistral-large-latest (cloud, Mistral)
 """
 import asyncio
 from pathlib import Path
@@ -42,17 +42,20 @@ async def run_evaluator_optimizer(file_name: str) -> None:
                     "Improve the tests to address all the feedback above."
                 )
 
-            gen_response = await Runner.run(test_generator_agent, prompt)
+            # Run Unit Test Generator
+            gen_response = await Runner.run(starting_agent=test_generator_agent, input=prompt)
             tests = gen_response.final_output
             display_token_usage(gen_response)
             print(f"  ✓ Tests generated ({len(tests.splitlines())} lines)")
 
+            #  Run Unit Test Evaluator
             print(f"\n[Iteration {iteration}/{MAX_ITERATIONS}] Evaluating...")
             eval_input = f"Java class:\n\n{code}\n\nUnit tests:\n\n{tests}"
             eval_response = await Runner.run(test_evaluator_agent, eval_input)
             evaluation = eval_response.final_output
             display_token_usage(eval_response)
 
+            # Print evaluation data
             print(f"  Score    : {evaluation.score}/10")
             print(f"  Approved : {'✓ Yes' if evaluation.approved else '✗ No'}")
             print(f"  Feedback : {evaluation.feedback}")
@@ -65,6 +68,7 @@ async def run_evaluator_optimizer(file_name: str) -> None:
         else:
             print(f"\n⚠ Max iterations reached. Best score: {evaluation.score}/10")
 
+    # Print final version of generated unit tests
     print(f"\n{'─' * 80}")
     print("FINAL GENERATED TESTS")
     print("─" * 80)

@@ -4,10 +4,15 @@ from dotenv import load_dotenv
 
 load_dotenv(override=True)
 
-_ollama_client = AsyncOpenAI(
-    base_url="http://localhost:11434/v1",
-    api_key="ollama",
+
+deepseek_model = OpenAIChatCompletionsModel(
+    model="deepseek-r1:8b",
+    openai_client=AsyncOpenAI(
+        base_url="http://localhost:11434/v1",
+        api_key="ollama"
+    )
 )
+
 
 test_generator_agent = Agent(
     name="Test_Generator",
@@ -19,8 +24,5 @@ test_generator_agent = Agent(
         "improve the existing tests to address every point raised. "
         "Return only the Java test class code — no explanation, no markdown fences."
     ),
-    model=OpenAIChatCompletionsModel(
-        model="deepseek-r1:8b",
-        openai_client=_ollama_client,
-    ),
+    model=deepseek_model
 )
