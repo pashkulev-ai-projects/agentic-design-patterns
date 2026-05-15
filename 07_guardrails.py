@@ -1,7 +1,11 @@
 """
 Pattern: Prompt Chaining with Guardrails
-Input guardrail blocks prompt injection attempts;
-Output guardrail blocks sensitive data leakage before output passes downstream.
+Guardrails are separate agents attached to guarded_reviewer_agent via
+input_guardrails=[prompt_injection_guardrail] and output_guardrails=[sensitive_data_leak_guardrail].
+The SDK runs the input guardrail before the agent sees the prompt — if it trips,
+InputGuardrailTripwireTriggered is raised and the pipeline stops immediately.
+The output guardrail runs on the agent's response before it is returned — if it trips,
+OutputGuardrailTripwireTriggered is raised, preventing sensitive data from reaching the next step.
 """
 import asyncio
 from agents import Runner, trace, InputGuardrailTripwireTriggered, OutputGuardrailTripwireTriggered

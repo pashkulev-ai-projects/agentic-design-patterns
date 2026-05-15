@@ -1,7 +1,11 @@
 """
 Pattern: Parallelization
-Specialist agents run concurrently via asyncio.gather();
-Results are aggregated sequentially by a dedicated aggregator agent.
+Each specialist agent (security, performance, readability) has a focused system prompt
+and output_type=SpecialistReview, making their outputs typed and schema-validated.
+asyncio.gather() runs all three Runner.run() calls concurrently — they are fully independent
+and have no knowledge of each other.
+The aggregator agent then receives all three reviews as a JSON array, calls the
+calculate_overall_score tool (weighted formula), and produces a final AggregatedReport.
 """
 import asyncio
 import json

@@ -1,6 +1,10 @@
 """
 Pattern: Prompt Chaining
-Each agent's output becomes the next agent's input: Code Reviewer → Frontend Developer → Email Sender.
+Agents are called sequentially in code — each Runner.run() receives the previous agent's output as input.
+Instead of returning free text, the Code Reviewer is configured with output_type=CodeReview — a Pydantic
+model — so the SDK deserializes its response into a typed Python object automatically.
+That object is then serialized to JSON and passed as input to the next agent in the chain.
+Chain: Code Reviewer (CodeReview) → Frontend Developer (HTML) → Email Sender.
 """
 import asyncio
 from agents import Runner, trace

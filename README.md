@@ -24,6 +24,7 @@ generation. The patterns covered here are framework-agnostic.
 
 ## Table of Contents
 
+- [How the Demos Are Structured](#how-the-demos-are-structured)
 - [Demo Overview](#demo-overview)
 - [SDK Concepts Covered](#sdk-concepts-covered)
 - [Agentic Workflow Patterns](#agentic-workflow-patterns)
@@ -32,6 +33,32 @@ generation. The patterns covered here are framework-agnostic.
 - [Project Setup](#project-setup)
 - [Running the Demos](#running-the-demos)
 - [Dependencies](#dependencies)
+
+---
+
+## How the Demos Are Structured
+
+Each demo file (`01_agents.py`, `02_agents_streamed_response.py`, etc.) focuses solely on
+**orchestrating the workflow** — importing agents, wiring them together, and running the pipeline.
+
+Agent definitions live in the `my_agents/` package:
+
+```
+my_agents/
+├── devils_advocate/    # 01, 02     — Devil's Advocate agent
+├── research/           # 03, 04     — Research Assistant agents
+├── cloud_desk_company/ # 05         — Router, Billing, and Tech Support agents
+├── code_review/        # 06, 07, 08 — Code Reviewer, specialist reviewers, aggregator
+├── guardrails/         # 07         — Injection detector and leak detector agents
+├── unit_testing/       # 09         — Test Generator and Test Evaluator agents
+├── memory/             # 10         — Thread Assistant and Memory Assistant agents
+└── common/             # shared     — Frontend Developer and Email Sender agents
+```
+
+Each agent is configured entirely through its `Agent(...)` definition — `instructions`, `tools`,
+`handoffs`, `output_type`, `input_guardrails`, and `output_guardrails`. The demo file simply
+imports the agent and calls `Runner.run()`. This separation keeps the demo files focused and
+makes the agent definitions reusable across multiple demos.
 
 ---
 

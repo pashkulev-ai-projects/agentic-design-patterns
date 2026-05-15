@@ -1,6 +1,10 @@
 """
 Pattern: Routing
-Router agent classifies intent and permanently transfers control to a specialist agent via handoffs.
+Agents listed in handoffs=[...] are the destinations the router can permanently transfer control to.
+When the router decides to hand off, the SDK transfers the conversation to the target agent —
+the router is no longer involved. The specialist then runs to completion with its own tools and instructions.
+Here: router_agent classifies intent on the very first message and immediately hands off
+to either billing_agent or tech_support_agent, each equipped with domain-specific mock tools.
 """
 import asyncio
 from agents import Runner, trace, RunResult

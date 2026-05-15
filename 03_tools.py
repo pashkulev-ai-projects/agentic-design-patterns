@@ -1,3 +1,10 @@
+"""
+Concept: Tool Use
+An Agent is given a list of callable tools (functions decorated with @function_tool).
+The agent autonomously decides when and how to call them based on its instructions.
+The SDK handles the tool call and tool result exchange automatically — no manual orchestration needed.
+Here: research_assistant_agent calls web_search once to gather results, then send_email to deliver the summary.
+"""
 import asyncio
 from agents import Runner, trace, RunResult
 from my_agents import research_assistant_agent

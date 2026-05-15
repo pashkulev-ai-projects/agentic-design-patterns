@@ -1,6 +1,16 @@
 """
-Pattern: State & Memory
-Two approaches compared: in-thread state (ephemeral, via to_input_list()) and persistent memory (durable SQLite, survives process restarts).
+Concept: State & Memory
+Two approaches to memory are compared side-by-side.
+
+Approach 1 — In-Thread State (ephemeral):
+  result.to_input_list() serialises the full conversation history into a message list.
+  Passing it as the input to the next Runner.run() continues the thread — the agent sees prior turns.
+  Memory dies when the process ends; a fresh run starts with no context.
+
+Approach 2 — Persistent SQLite Memory (durable):
+  memory_assistant_agent has tools=[remember, recall_all] backed by a SQLite database.
+  Its instructions mandate calling recall_all() on every turn, then remember() for new facts.
+  Facts survive across separate runs and process restarts.
 """
 import asyncio
 

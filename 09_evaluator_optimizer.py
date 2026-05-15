@@ -1,7 +1,11 @@
 """
 Pattern: Evaluator-Optimizer
-Generator and evaluator loop iteratively until a quality threshold is met or max iterations are reached.
-Generator: Deepseek R1:8b (local, Ollama) — Evaluator: mistral-large-latest (cloud, Mistral)
+Two agents with different models form a feedback loop driven entirely by application code.
+test_generator_agent (Deepseek R1:8b via Ollama, local) generates or improves unit tests.
+test_evaluator_agent (mistral-large-latest via Mistral API, cloud) scores them and sets
+approved=True on its TestEvaluation structured output when the quality threshold is met.
+The loop runs until approved=True or MAX_ITERATIONS is reached; on each iteration the
+evaluator's feedback and missing_cases are injected into the generator's next prompt.
 """
 import asyncio
 from pathlib import Path

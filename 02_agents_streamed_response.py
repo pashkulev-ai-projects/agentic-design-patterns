@@ -1,3 +1,10 @@
+"""
+Concept: Streaming
+Runner.run_streamed() returns a StreamedRunResult instead of waiting for the full response.
+Iterating over .stream_events() yields RawResponsesStreamEvent objects in real time.
+Each ResponseTextDeltaEvent carries a text delta that can be printed as it arrives,
+producing a token-by-token streaming effect without blocking until the full response is ready.
+"""
 import asyncio
 from agents import Runner, RawResponsesStreamEvent
 from openai.types.responses import ResponseTextDeltaEvent

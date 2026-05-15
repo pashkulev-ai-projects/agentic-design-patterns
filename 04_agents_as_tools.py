@@ -1,7 +1,10 @@
 """
 Pattern: Orchestrator-Worker
-Specialist sub-agents exposed as tools via .as_tool();
-Control returns to the orchestrator after each sub-agent completes.
+Sub-agents are converted into callable tools via agent.as_tool() and added to the orchestrator's tools list.
+The orchestrator calls them like any other function tool — the sub-agent runs, returns its output,
+and control returns to the orchestrator, which decides the next step.
+Here: frontend_developer_agent is wrapped as the design_email tool; the orchestrator decides
+when to call web_search, design_email, and send_email and in what order.
 """
 import asyncio
 from agents import Runner, trace
