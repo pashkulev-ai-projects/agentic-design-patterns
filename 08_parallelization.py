@@ -10,7 +10,6 @@ calculate_overall_score tool (weighted formula), and produces a final Aggregated
 import asyncio
 import json
 import time
-from pathlib import Path
 from agents import Runner, trace
 from my_agents import (
     security_reviewer_agent,
@@ -22,9 +21,7 @@ from my_agents import (
     frontend_developer_agent,
     email_sender_agent
 )
-from utils import display_token_usage
-
-ASSETS_DIR = Path(__file__).parent / "assets" / "code_review"
+from utils import display_token_usage, get_source_code, generate_trace_id
 
 
 async def run_specialist(agent, code: str, label: str) -> SpecialistReview:
@@ -36,13 +33,14 @@ async def run_specialist(agent, code: str, label: str) -> SpecialistReview:
 
 
 async def review_parallel(file_name: str) -> None:
-    code = (ASSETS_DIR / file_name).read_text()
+    trace_id = generate_trace_id()
+    code = get_source_code(file_name)
 
     print(f"\n{'=' * 80}")
     print(f"File: {file_name}")
     print("=" * 80)
 
-    with trace("Parallelization Demo"):
+    with trace(workflow_name="Parallelization Demo", trace_id=trace_id):
         # --- Parallel phase: 3 specialist reviewers run simultaneously ---
         print("\n[Parallel] Running Security, Performance, and Readability reviewers simultaneously...")
         t0 = time.perf_counter()
@@ -81,6 +79,7 @@ async def review_parallel(file_name: str) -> None:
                 "readability": readability_review.model_dump(),
             }
         })
+
         # Call Frontend Developer
         frontend_response = await Runner.run(
             starting_agent=frontend_developer_agent,
@@ -95,7 +94,11 @@ async def review_parallel(file_name: str) -> None:
         )
         display_token_usage(email_response)
 
-    # --- Console summary ---
+        # Print summary
+        print_console_summary(report, parallel_time)
+
+
+def print_console_summary(report: AggregatedReport, parallel_time: float) -> None:
     print(f"\n{'─' * 80}")
     print(f"AGGREGATED REPORT")
     print(f"{'─' * 80}")
@@ -114,7 +117,7 @@ async def review_parallel(file_name: str) -> None:
 
 async def main():
     await review_parallel("buggy_python.py")
-    # await review_parallel("CleanBankAccount.java")
+    await review_parallel("CleanBankAccount.java")
 
 
 if __name__ == "__main__":

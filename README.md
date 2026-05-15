@@ -39,7 +39,7 @@ generation. The patterns covered here are framework-agnostic.
 ## How the Demos Are Structured
 
 Each demo file (`01_agents.py`, `02_agents_streamed_response.py`, etc.) focuses solely on
-**orchestrating the workflow** — importing agents, wiring them together, and running the pipeline.
+**running the workflow** — importing agents and calling `Runner.run()`.
 
 Agent definitions live in the `my_agents/` package:
 

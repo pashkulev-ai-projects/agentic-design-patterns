@@ -11,16 +11,17 @@ import asyncio
 from agents import Runner, trace, InputGuardrailTripwireTriggered, OutputGuardrailTripwireTriggered
 from my_agents import frontend_developer_agent, email_sender_agent, guarded_reviewer_agent
 from my_agents.code_review.code_reviewer import CodeReview
-from utils import display_token_usage, get_source_code
+from utils import display_token_usage, get_source_code, generate_trace_id
 
 
 async def run_pipeline(label: str, code: str) -> None:
+    trace_id = generate_trace_id()
     print(f"\n{'=' * 100}")
     print(f"Input: {label}")
     print("=" * 100)
 
     try:
-        with trace("Guardrails Demo"):
+        with trace(workflow_name="Guardrails Demo", trace_id=trace_id):
             # Step 1 — Code Reviewer (guarded)
             review_response = await Runner.run(
                 starting_agent=guarded_reviewer_agent,
