@@ -8,19 +8,18 @@ The loop runs until approved=True or MAX_ITERATIONS is reached; on each iteratio
 evaluator's feedback and missing_cases are injected into the generator's next prompt.
 """
 import asyncio
-from pathlib import Path
 from agents import Runner, trace
 from my_agents.unit_testing.test_generator import test_generator_agent
 from my_agents.unit_testing.test_evaluator import test_evaluator_agent, TestEvaluation
-from utils import display_token_usage
+from utils import display_token_usage, get_source_code, generate_trace_id
 
-ASSETS_DIR = Path(__file__).parent / "assets" / "code_review"
 MAX_ITERATIONS = 3
 SCORE_THRESHOLD = 9
 
 
 async def run_evaluator_optimizer(file_name: str) -> None:
-    code = (ASSETS_DIR / file_name).read_text()
+    trace_id = generate_trace_id()
+    code = get_source_code(file_name)
 
     print(f"\n{'=' * 80}")
     print(f"Evaluator-Optimizer — {file_name}")
@@ -31,7 +30,7 @@ async def run_evaluator_optimizer(file_name: str) -> None:
     tests: str | None = None
     evaluation: TestEvaluation | None = None
 
-    with trace("Evaluator-Optimizer Demo"):
+    with trace(workflow_name="Evaluator-Optimizer Demo", trace_id=trace_id):
         for iteration in range(1, MAX_ITERATIONS + 1):
             print(f"\n[Iteration {iteration}/{MAX_ITERATIONS}] Generating unit tests...")
 
@@ -56,10 +55,9 @@ async def run_evaluator_optimizer(file_name: str) -> None:
             print(f"\n[Iteration {iteration}/{MAX_ITERATIONS}] Evaluating...")
             eval_input = f"Java class:\n\n{code}\n\nUnit tests:\n\n{tests}"
             eval_response = await Runner.run(test_evaluator_agent, eval_input)
-            evaluation = eval_response.final_output
+            evaluation: TestEvaluation = eval_response.final_output
             display_token_usage(eval_response)
 
-            # Print evaluation data
             print(f"  Score    : {evaluation.score}/10")
             print(f"  Approved : {'✓ Yes' if evaluation.approved else '✗ No'}")
             print(f"  Feedback : {evaluation.feedback}")
@@ -69,6 +67,7 @@ async def run_evaluator_optimizer(file_name: str) -> None:
             if evaluation.approved:
                 print(f"\n✓ Quality threshold ({SCORE_THRESHOLD}/10) reached in {iteration} iteration(s)!")
                 break
+
         else:
             print(f"\n⚠ Max iterations reached. Best score: {evaluation.score}/10")
 

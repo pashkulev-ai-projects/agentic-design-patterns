@@ -17,7 +17,7 @@ import asyncio
 from agents import Runner, trace
 from my_agents import thread_assistant_agent
 from my_agents.memory.memory_assistant import memory_assistant_agent
-from utils import display_token_usage
+from utils import display_token_usage, generate_trace_id
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
@@ -38,7 +38,6 @@ def _log_output(prompt, response, turn):
 # ─────────────────────────────────────────────────────────────────────────────
 
 async def demo_in_thread_state() -> None:
-    print(LINE_SEPARATOR)
     print("APPROACH 1 — In-Thread State (context lives within the session)")
 
     prompt1 = "My name is Ivan and I work in ICT Strypes."
@@ -55,7 +54,7 @@ async def demo_in_thread_state() -> None:
 
     # Fresh run — agent has no memory
     prompt3 = "What do you know about me?"
-    result3 = await Runner.run(thread_assistant_agent, prompt3)
+    result3 = await Runner.run(starting_agent=thread_assistant_agent, input=prompt3)
     _log_output(prompt3, result3.final_output, 3)
     display_token_usage(result3)
 
@@ -72,7 +71,7 @@ async def demo_persistent_memory() -> None:
     print("\n--- Session 1: introducing ourselves ---")
 
     prompt1 = "Hi! My name is Ivan, I'm a DevOps Engineer at Strypes."
-    result1 = await Runner.run(memory_assistant_agent, prompt1)
+    result1 = await Runner.run(starting_agent=memory_assistant_agent, input=prompt1)
     _log_output(prompt1, result1.final_output, 1)
     display_token_usage(result1)
 
@@ -84,7 +83,9 @@ async def demo_persistent_memory() -> None:
 
 
 async def main() -> None:
-    with trace("State & Memory Demo"):
+    trace_id = generate_trace_id()
+
+    with trace(workflow_name="State & Memory Demo", trace_id=trace_id):
         await demo_in_thread_state()
         await demo_persistent_memory()
 
